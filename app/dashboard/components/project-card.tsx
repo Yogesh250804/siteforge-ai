@@ -2,9 +2,9 @@
 // Project Card Component
 // Displays a single project with status badge, actions menu, and hover effects.
 // ============================================================================
-
 "use client";
 
+import Link from "next/link";
 import React, { useState, useTransition } from "react";
 import {
   MoreHorizontal,
@@ -115,12 +115,13 @@ export function ProjectCard({ project }: { project: Project }) {
                   onClick={() => setMenuOpen(false)}
                 />
                 <div className="absolute right-0 top-8 z-50 w-44 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl py-1.5 text-xs">
-                  <button
+                  <Link
+                    href={`/dashboard/project/${project.id}`}
                     className="w-full flex items-center gap-2.5 px-3.5 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium"
                     onClick={() => setMenuOpen(false)}
                   >
                     <Edit3 className="w-3.5 h-3.5" /> Edit Project
-                  </button>
+                  </Link>
                   <button
                     className="w-full flex items-center gap-2.5 px-3.5 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium"
                     onClick={handleDuplicate}
