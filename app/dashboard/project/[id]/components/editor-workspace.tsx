@@ -7,6 +7,7 @@ import type { Project } from "@/lib/types/database";
 import { updateProject } from "@/app/actions/projects";
 import { EditorSidebar } from "./editor-sidebar";
 import { PreviewSandbox } from "./preview-sandbox";
+import { DeployModal } from "./deploy-modal";
 
 interface EditorWorkspaceProps {
   project: Project;
@@ -16,6 +17,7 @@ export function EditorWorkspace({ project }: EditorWorkspaceProps) {
   const [isPending, startTransition] = useTransition();
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [deployOpen, setDeployOpen] = useState(false);
 
   // Controlled states bound to editors and simulators
   const [businessInfo, setBusinessInfo] = useState(project.business_info);
@@ -81,8 +83,8 @@ export function EditorWorkspace({ project }: EditorWorkspaceProps) {
           )}
 
           <button
-            onClick={() => alert("To deploy this website onto your custom Vercel dashboard, upgrade to Pro!")}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-505 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-2 group active:scale-95"
+            onClick={() => setDeployOpen(true)}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-555 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-2 group active:scale-95"
           >
             <Globe className="w-4 h-4" />
             <span>Publish Site</span>
@@ -114,6 +116,13 @@ export function EditorWorkspace({ project }: EditorWorkspaceProps) {
           templateId={project.template_id}
         />
       </div>
+
+      {/* Publish Deploy Modal */}
+      <DeployModal 
+        open={deployOpen}
+        onClose={() => setDeployOpen(false)}
+        projectId={project.id}
+      />
     </div>
   );
 }
