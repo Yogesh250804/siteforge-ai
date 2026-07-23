@@ -1,19 +1,14 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useTransition, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { 
   Sparkles, 
   ArrowLeft, 
   ArrowRight, 
   Check, 
   Compass, 
-  Briefcase, 
-  RefreshCw,
   Info,
-  ChevronRight,
-  Palette,
-  Laptop
 } from "lucide-react";
 import { templates } from "@/lib/templates";
 import { generateSiteAction } from "@/app/actions/generator";
@@ -27,6 +22,9 @@ const STEPS = [
 
 export default function CreateProjectPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const templateFromQuery = searchParams.get("template");
+
   const [currentStep, setCurrentStep] = useState(1);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +37,12 @@ export default function CreateProjectPage() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState("restaurant");
+
+  useEffect(() => {
+    if (templateFromQuery && templates.some((t) => t.id === templateFromQuery)) {
+      setSelectedTemplate(templateFromQuery);
+    }
+  }, [templateFromQuery]);
 
   // AI progress state
   const [genProgress, setGenProgress] = useState(0);
@@ -66,7 +70,7 @@ export default function CreateProjectPage() {
   const handleCreate = () => {
     setError(null);
     setCurrentStep(3);
-    
+
     // Animate progress messages
     const messages = [
       { progress: 15, msg: "Establishing secure context tunnel..." },
@@ -119,10 +123,10 @@ export default function CreateProjectPage() {
             if (currentStep === 1) router.push("/dashboard");
             else handleBack();
           }}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors mb-6"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Back
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back</span>
         </button>
       )}
 
@@ -140,8 +144,8 @@ export default function CreateProjectPage() {
                       isCompleted 
                         ? "bg-indigo-600 border-indigo-600 text-white" 
                         : isCurrent
-                          ? "border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 ring-4 ring-indigo-50 dark:ring-indigo-950/30"
-                          : "border-slate-200 dark:border-slate-850 text-slate-400 bg-white dark:bg-slate-900"
+                          ? "border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 ring-4 ring-indigo-50 dark:ring-indigo-950/30"
+                          : "border-slate-200 dark:border-slate-800 text-slate-400 bg-white dark:bg-slate-900"
                     }`}
                   >
                     {isCompleted ? <Check className="w-4 h-4" /> : step.id}
@@ -150,7 +154,7 @@ export default function CreateProjectPage() {
                     <p className="text-xs font-bold text-slate-900 dark:text-white leading-none">
                       {step.name}
                     </p>
-                    <p className="text-[10px] text-slate-400 mt-1 leading-none">
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-none">
                       {step.desc}
                     </p>
                   </div>
@@ -165,23 +169,23 @@ export default function CreateProjectPage() {
       </div>
 
       {/* Main card panel */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl p-8">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xl p-6 sm:p-8">
         
         {/* STEP 1: BUSINESS INFO */}
         {currentStep === 1 && (
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                <Info className="w-5 h-5 text-indigo-500" />
+                <Info className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 Tell us about your Business
               </h2>
-              <p className="text-xs text-slate-450 dark:text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 Provide basic context and description. Gemini uses this to draft your site copywriting.
               </p>
             </div>
 
             {error && (
-              <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 text-xs font-semibold text-red-700 dark:text-red-300">
+              <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-xs font-semibold text-rose-700 dark:text-rose-300">
                 {error}
               </div>
             )}
@@ -197,7 +201,7 @@ export default function CreateProjectPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g., Rise Cafe"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-slate-900 dark:text-white"
                 />
               </div>
 
@@ -211,7 +215,7 @@ export default function CreateProjectPage() {
                   value={industry}
                   onChange={(e) => setIndustry(e.target.value)}
                   placeholder="e.g., Coffee shop, Hair salon, Gym"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-slate-900 dark:text-white"
                 />
               </div>
 
@@ -224,7 +228,7 @@ export default function CreateProjectPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="hello@yourbusiness.com"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-slate-900 dark:text-white"
                 />
               </div>
 
@@ -237,7 +241,7 @@ export default function CreateProjectPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
                   placeholder="Describe your services, values, unique offerings..."
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium resize-none text-slate-900 dark:text-white"
                 />
               </div>
 
@@ -250,7 +254,7 @@ export default function CreateProjectPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+1 (555) 123-4567"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-slate-900 dark:text-white"
                 />
               </div>
 
@@ -263,7 +267,7 @@ export default function CreateProjectPage() {
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="123 Main St, New York"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium text-slate-900 dark:text-white"
                 />
               </div>
             </div>
@@ -271,9 +275,9 @@ export default function CreateProjectPage() {
             <div className="pt-4 flex justify-end">
               <button
                 onClick={handleNext}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transition-all flex items-center gap-2 group"
+                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold rounded-xl shadow-md shadow-indigo-600/20 transition-all flex items-center gap-2 group active:scale-95"
               >
-                Choose Template
+                <span>Choose Template</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
@@ -285,10 +289,10 @@ export default function CreateProjectPage() {
           <div className="space-y-6">
             <div>
               <h2 className="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                <Compass className="w-5 h-5 text-indigo-500" />
+                <Compass className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 Select baseline template
               </h2>
-              <p className="text-xs text-slate-450 dark:text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 Choose the structural preset layout. The AI will customize colors, headings, and sections automatically.
               </p>
             </div>
@@ -300,13 +304,13 @@ export default function CreateProjectPage() {
                   onClick={() => setSelectedTemplate(tmpl.id)}
                   className={`text-left p-4 rounded-xl border transition-all ${
                     selectedTemplate === tmpl.id
-                      ? "border-indigo-600 bg-indigo-50/30 dark:bg-indigo-950/20 ring-1 ring-indigo-600"
-                      : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                      ? "border-indigo-600 bg-indigo-50/40 dark:bg-indigo-950/30 ring-1 ring-indigo-600 shadow-sm"
+                      : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white/50 dark:bg-slate-950/50"
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center"
+                      className="w-10 h-10 rounded-xl flex items-center justify-center border border-slate-200/50 dark:border-slate-800/50"
                       style={{ backgroundColor: tmpl.colorScheme.primary + "20" }}
                     >
                       <div
@@ -315,7 +319,7 @@ export default function CreateProjectPage() {
                       />
                     </div>
                     {selectedTemplate === tmpl.id && (
-                      <span className="px-2 py-0.5 rounded bg-indigo-600 text-white text-[9px] font-extrabold">
+                      <span className="px-2 py-0.5 rounded bg-indigo-600 text-white text-[9px] font-extrabold tracking-wider">
                         SELECTED
                       </span>
                     )}
@@ -323,20 +327,20 @@ export default function CreateProjectPage() {
                   <h4 className="font-bold text-sm text-slate-900 dark:text-white mt-3">
                     {tmpl.name}
                   </h4>
-                  <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
                     {tmpl.description}
                   </p>
                   <div className="flex flex-wrap gap-1 mt-3">
                     {tmpl.defaultSections.slice(0, 3).map((sect) => (
                       <span 
                         key={sect.id} 
-                        className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-850 text-[9px] font-bold text-slate-500 dark:text-slate-400"
+                        className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[9px] font-bold text-slate-600 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50"
                       >
                         {sect.name}
                       </span>
                     ))}
                     {tmpl.defaultSections.length > 3 && (
-                      <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-850 text-[9px] font-bold text-slate-500 dark:text-slate-400">
+                      <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[9px] font-bold text-slate-600 dark:text-slate-400 border border-slate-200/50 dark:border-slate-700/50">
                         +{tmpl.defaultSections.length - 3} more
                       </span>
                     )}
@@ -348,17 +352,17 @@ export default function CreateProjectPage() {
             <div className="pt-4 flex justify-between border-t border-slate-100 dark:border-slate-800">
               <button
                 onClick={handleBack}
-                className="px-5 py-3 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold transition-colors"
+                className="px-5 py-3 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold transition-colors text-slate-700 dark:text-slate-300"
               >
                 Back
               </button>
               <button
                 onClick={handleCreate}
                 disabled={isPending}
-                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold rounded-xl shadow-lg transition-all flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold rounded-xl shadow-md shadow-indigo-600/20 transition-all flex items-center gap-2 active:scale-95 disabled:opacity-50"
               >
                 <Sparkles className="w-4 h-4" />
-                Forge Website
+                <span>Forge Website</span>
               </button>
             </div>
           </div>
@@ -367,22 +371,22 @@ export default function CreateProjectPage() {
         {/* STEP 3: LOADING GENERATION SCREEN */}
         {currentStep === 3 && (
           <div className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="relative mb-8">
-              <div className="w-20 h-20 rounded-full border-4 border-slate-100 dark:border-slate-850 border-t-indigo-600 animate-spin" />
-              <Sparkles className="w-8 h-8 text-indigo-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse" />
+            <div className="relative mb-8 flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full border-4 border-slate-100 dark:border-slate-800 border-t-indigo-600 dark:border-t-indigo-400 animate-spin" />
+              <Sparkles className="w-8 h-8 text-indigo-600 dark:text-indigo-400 absolute animate-pulse" />
             </div>
 
             <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-2">
               Generating Site Forge Context
             </h3>
-            <p className="text-xs text-slate-450 dark:text-slate-400 max-w-sm mb-6">
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mb-6">
               Please wait while our Gemini contextual layout engine structures your pages and copywriting variables.
             </p>
 
             {/* Progress line */}
-            <div className="w-full max-w-md bg-slate-100 dark:bg-slate-850 h-2.5 rounded-full overflow-hidden mb-3">
+            <div className="w-full max-w-md bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden mb-3">
               <div 
-                className="h-full bg-gradient-to-r from-indigo-600 to-violet-600 transition-all duration-500"
+                className="h-full bg-gradient-to-r from-indigo-600 to-violet-600 transition-all duration-500 rounded-full"
                 style={{ width: `${genProgress}%` }}
               />
             </div>
