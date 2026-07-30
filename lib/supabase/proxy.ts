@@ -12,37 +12,46 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          // Set cookies on the request (for downstream server components)
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          // Set cookies on the response (for the browser)
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // IMPORTANT: Do NOT call supabase.auth.signOut() or
-  // supabase.auth.updateUser() here. Only getUser() is safe.
-  // getUser() refreshes the session if expired.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  if (!url || !anonKey) {
+    // Missing Supabase environment variables on Vercel
+    return { user: null, supabaseResponse };
+  }
 
-  return { user, supabaseResponse };
+  try {
+    const supabase = createServerClient(
+      url,
+      anonKey,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            );
+            supabaseResponse = NextResponse.next({
+              request,
+            });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    return { user, supabaseResponse };
+  } catch (error) {
+    console.error("Supabase proxy updateSession error:", error);
+    return { user: null, supabaseResponse };
+  }
 }
+

@@ -8,27 +8,32 @@ import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy";
 
 export async function proxy(request: NextRequest) {
-  const { user, supabaseResponse } = await updateSession(request);
+  try {
+    const { user, supabaseResponse } = await updateSession(request);
 
-  const { pathname } = request.nextUrl;
+    const { pathname } = request.nextUrl;
 
-  // Protected routes: redirect unauthenticated users to /login
-  if (pathname.startsWith("/dashboard")) {
-    if (!user) {
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
+    // Protected routes: redirect unauthenticated users to /login
+    if (pathname.startsWith("/dashboard")) {
+      if (!user) {
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("redirect", pathname);
+        return NextResponse.redirect(loginUrl);
+      }
     }
-  }
 
-  // Auth routes: redirect authenticated users to /dashboard
-  if (pathname === "/login" || pathname === "/register") {
-    if (user) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+    // Auth routes: redirect authenticated users to /dashboard
+    if (pathname === "/login" || pathname === "/register") {
+      if (user) {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
     }
-  }
 
-  return supabaseResponse;
+    return supabaseResponse;
+  } catch (error) {
+    console.error("Error in Next.js proxy middleware:", error);
+    return NextResponse.next();
+  }
 }
 
 // Only run proxy on relevant routes; skip static assets and API routes

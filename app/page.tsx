@@ -332,7 +332,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Interactive Sandbox</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 mb-4 bg-gradient-to-r from-indigo-950 to-indigo-850 dark:from-white dark:to-slate-200">
+            <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 mb-4 bg-gradient-to-r from-indigo-950 to-indigo-850 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">
               Try It Right Now
             </h2>
             <p className="text-slate-600 dark:text-slate-400">
@@ -534,7 +534,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Pricing Plans</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 mb-4 bg-gradient-to-r from-slate-900 to-indigo-950 dark:from-white dark:to-slate-300">
+            <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 mb-4 bg-gradient-to-r from-slate-900 to-indigo-950 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
               Pricing Designed for Scale
             </h2>
             <p className="text-slate-600 dark:text-slate-400 mb-8">
@@ -638,8 +638,8 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Real Customer Love</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 mb-4 bg-gradient-to-r from-slate-950 to-indigo-950 dark:from-white dark:to-slate-200">
-              Trusted by 10,000+ Creators
+            <h2 className="text-3xl sm:text-4xl font-extrabold mt-2 mb-4 bg-gradient-to-r from-slate-950 to-indigo-950 dark:from-white dark:to-slate-200 bg-clip-text text-transparent">
+              Loved by Business Owners & Creators
             </h2>
             <p className="text-slate-600 dark:text-slate-400">
               Hear from business owners who launched their sites with zero coding experience.
@@ -684,7 +684,7 @@ export default function LandingPage() {
                 {[...Array(5)].map((_, i) => <Sparkles key={i} className="w-4 h-4 fill-current" />)}
               </div>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-6 font-medium italic">
-                "Our agency builds websites for local clients. Using SiteForge AI, we've increased our production output by 10x. It produces clean Next.js and Tailwind code that is easily extensible."
+                "Our agency builds websites for local clients. Using SiteForge AI, we generate production-ready websites in record time. It produces clean Next.js and Tailwind code that is easily extensible."
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center font-bold text-indigo-600">AK</div>
@@ -704,7 +704,7 @@ export default function LandingPage() {
         <div className="relative max-w-4xl mx-auto px-4">
           <h2 className="text-3xl sm:text-5xl font-extrabold mb-6">Ready to Forge Your Digital Presence?</h2>
           <p className="text-indigo-200 max-w-xl mx-auto mb-8 text-sm sm:text-base leading-relaxed">
-            Join thousands of small business owners and creators scaling their brands with fast, AI-optimized web pages.
+            Join business owners and creators scaling their brands with fast, AI-optimized web pages.
           </p>
           <a 
             href="/register" 
